@@ -1,46 +1,29 @@
 <?php
 namespace src\configuration;
 class Router extends \src\controllers\StaticController {
-	private $path;
-	private $uri;
-	function __construct() {
-			$this->path = include(DIRROOT.DIRCONF.'page-path.php');
-			$uuri = trim($_SERVER['REQUEST_URI'], '/');
-			if(preg_match('/(\W)/', $uuri) == 0) {
-				$this->uri = $uuri;
-			} else {
-				header('HTTP/1.1 404 Not Found');
-				exit();
-			}
-	}
 
-	public function getUri() {
-		var_dump($this->uri);
-	}
+	private static $path;
+	private static $uri;
 
-	public function run() {
-			//head page
-		if($this->uri == "") {
-			parent::__construct();
-			self::headpage();
-			exit();
-		}
-			//target page
-		$chekpoint = true;
-		foreach ($this->path as $key) {
-			if($this->uri == $key) {
-				$chekpoint = false;
-				parent::__construct();
-				self::$key();
-				require_once(DIRROOT.DIRVIEWS.'footer.php');
+	public function __construct() {}
+	private function __clone() {}
+
+	static function run() {
+			//---	Prepare uri and path
+		self::$path = require_once(ROOT.DIRCONF.'page-path.php');
+		if(preg_match('/(\W)+-/', $u = trim($_SERVER['REQUEST_URI'], '/')) == false) self::$uri = & $u;
+		else { header('HTTP/1.1 404 Not Found'); exit(); }
+
+			//---	Target page
+		foreach (self::$path as $key => $val) {
+			if(self::$uri == $key) {
+				require_once(ROOT.DIRVIEWS.'menu.php'); parent::$val();
+				require_once(ROOT.DIRVIEWS.'footer.php');
 				exit();
 			}
 		}
-		if($chekpoint == true) {
-				header('HTTP/1.1 404 Not Found');
-			}
+			//---	Target not page
+		header('HTTP/1.1 404 Not Found');
 	}
 }
-
-
 ?>

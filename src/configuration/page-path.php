@@ -1,10 +1,11 @@
 <?php
 return [
-
-	'equipments',
-	'about',
-	'technologies',
-	'communications'
+    '' => 'headpage',
+	'equipments' => 'equipments',
+	'about' => 'about',
+	'technologies' => 'technologies',
+	'communications' => 'communications',
+    'qwe/asd' => 'communications',
 	
 	];
 ?>
